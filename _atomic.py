@@ -62,12 +62,27 @@ def do_svn(directory, repository):
 	check_make_directory(directory)
 
 	if os.path.exists(directory + '/.svn/'):
+		checked_out_url = subprocess.getoutput('cd ' + directory + '; svn info | awk \'/^URL/{print $2}\'')
 
-		checked_out_version = subprocess.getoutput('cd ' + directory + '; svn info | awk \'/^URL/{print $2}\'')
-		print(checked_out_version)
+		if checked_out_url == repository:
+			print('- SVN up')
+			out = subprocess.check_output('cd ' + directory + '; svn info | awk \'/^URL/{print $2}\'', shell=True)
+		else:
+			print('- SVN switch')
+			print('  from ' + checked_out_url)
+			print('  to   ' + repository)
+
+			# Themes in https://themes.svn.wordpress.org/ produce the folllowing error when using svn switch
+			# svn: E195012: Path '.' does not share common version control ancestry with the requested switch location.  Use --ignore-ancestry to disable this check.
+			if 'https://themes.svn.wordpress.org/' in repository:
+				svn_ignore_ancestry = '--ignore-ancestry '
+			else:
+				svn_ignore_ancestry = ''
+
+			out = subprocess.check_output('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository, shell=True)
 	else:
 		# Checkout the repo
-		print('- Checking out the SVN repository')
+		print('- SVN checkout ' + repository)
 		out = subprocess.check_output('cd ' + directory + '; svn co ' + repository + ' .', shell=True)
 	
 
