@@ -10,23 +10,41 @@ def do_git(directory, repository, reference):
 		os.makedirs(directory)
 		print('- Directory created')
 
-	try:
-		subprocess.check_output('cd ' + directory + '; git rev-parse --is-inside-work-tree', shell=True)
+	# todo: how do you change from a tag release back to master in git?
+
+	if os.path.exists(directory + '/.git/'):
+		#subprocess.check_output('cd ' + directory + '; git rev-parse --is-inside-work-tree', shell=True)
 		print('- Exists as a managed repository')
 		try:
-			checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
-			if checked_out_version != reference:
-				print('- Currently on ' + checked_out_version + ', changing to ' + reference)
-				subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
+			#checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
+			git_branch = subprocess.getoutput('cd ' + directory + '; git branch')
+
+			if git_branch == '* master':
+				if reference == 'master':
+					# Should this be git fetch?
+					print('- Currently on master, pulling latest changes')
+					subprocess.check_output('cd ' + directory + '; git pull', shell=True)
+				else:
+					print('- Currently on master, changing to ' + reference)
+					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
 			else:
-				print('- Already set to reference ' + reference)
-				print('- No further changes required')
+				checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
+				if checked_out_version != reference:
+					print('- Currently on ' + checked_out_version + ', changing to ' + reference)
+					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
+				else:
+					print('- Already set to reference ' + reference)
+					print('- No further changes required')
 		except:
 			print('- Could not determine current tag reference')
-	except:
-		# Checkout the repo and set tag
-		print('- Cloning and moving to tag ' + reference)
-		out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .; git checkout tags/' + reference, shell=True)
+	else:
+		# Checkout the repo
+		print('- Cloning and moving to reference ' + reference)
+		out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .', shell=True)
+
+		# Set to a tag release if the reference is not 'master'
+		if reference != 'master':
+			out = subprocess.check_output('cd ' + directory + '; git checkout tags/' + reference, shell=True)
 
 	print('\n')
 	return
