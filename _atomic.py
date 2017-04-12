@@ -1,3 +1,13 @@
+'''
+Python script to construct a working installation of WordPress, together with plugins and themes.
+Atomic acts similar to SVN:Externals and Composer.
+
+Requires
+* Python3+
+* git
+* svn
+'''
+
 import json
 import os
 import subprocess
@@ -20,7 +30,7 @@ def do_git(directory, repository, reference):
 	# todo: how do you change from a tag release back to master in git?
 
 	if os.path.exists(directory + '/.git/'):
-		print('- Exists as a managed repository')
+		print('- Exists as a managed GIT repository')
 		try:
 			#checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
 			git_branch = subprocess.getoutput('cd ' + directory + '; git branch')
@@ -62,7 +72,10 @@ def do_svn(directory, repository):
 	check_make_directory(directory)
 
 	if os.path.exists(directory + '/.svn/'):
+		print('- Exists as a managed SVN repository')
 		checked_out_url = subprocess.getoutput('cd ' + directory + '; svn info | awk \'/^URL/{print $2}\'')
+
+		repository = repository.rstrip('/')
 
 		if checked_out_url == repository:
 			print('- SVN up')
@@ -131,5 +144,11 @@ for component in specification['components']:
 		do_svn(pwd + component['install_dir'] + component['name'], component['repo'])
 
 
-# Fix permissions
+#
+# What about wp-config.php?
+#
 
+
+#
+# Fix permissions
+#
