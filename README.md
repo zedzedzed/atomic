@@ -6,5 +6,6 @@ Requires
 * svn
 
 ```
+$ git config --global credential.helper cache
 $ python3 _atomic.py
 ```
