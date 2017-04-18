@@ -78,8 +78,8 @@ def do_svn(directory, repository):
 		repository = repository.rstrip('/')
 
 		if checked_out_url == repository:
-			print('- SVN up')
-			out = subprocess.check_output('cd ' + directory + '; svn info | awk \'/^URL/{print $2}\'', shell=True)
+			print('- SVN up with ' + repository)
+			out = subprocess.getoutput('cd ' + directory + '; svn up')
 		else:
 			print('- SVN switch')
 			print('  from ' + checked_out_url)
@@ -92,7 +92,10 @@ def do_svn(directory, repository):
 			else:
 				svn_ignore_ancestry = ''
 
-			out = subprocess.check_output('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository, shell=True)
+			out = subprocess.getoutput('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository)
+
+		if len(out) > 0:
+			print(out) 
 	else:
 		# Checkout the repo
 		print('- SVN checkout ' + repository)
