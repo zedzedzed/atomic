@@ -39,12 +39,14 @@ def do_git(directory, repository, reference):
 			git_branch = subprocess.getoutput('cd ' + directory + '; git branch')
 
 			if git_branch == '* master':
+				print('- Currently on master at ' + repository)
+
 				if reference == 'master':
 					# Should this be git fetch?
-					print('- Currently on master, pulling latest changes')
+					print('- Pulling latest changes')
 					subprocess.check_output('cd ' + directory + '; git pull', shell=True)
 				else:
-					print('- Currently on master, changing to ' + reference)
+					print('- Changing to reference ' + reference)
 					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
 			else:
 				checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
@@ -165,4 +167,5 @@ for component in specification['components']:
 #
 print('------------')
 print('Completed in %.2f seconds' %(time.time() - start_time))
+print('\n')
 
