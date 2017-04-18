@@ -9,11 +9,14 @@ Requires
 '''
 
 import time
+start_time = time.time()
 import json
 import os
 import subprocess
 
-start_time = time.time()
+#start_time = time.time()
+count_git = 0
+count_svn = 0
 
 
 def check_make_directory(directory):
@@ -27,6 +30,7 @@ def check_make_directory(directory):
 
 def do_git(directory, repository, reference):
 	print('[*** ' + directory + ' ***]')
+	global count_git
 
 	check_make_directory(directory)
 
@@ -48,11 +52,13 @@ def do_git(directory, repository, reference):
 				else:
 					print('- Changing to reference ' + reference)
 					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
+				count_git += 1
 			else:
 				checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
 				if checked_out_version != reference:
 					print('- Currently on ' + checked_out_version + ', changing to ' + reference)
 					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
+					count_git += 1
 				else:
 					print('- Already set to reference ' + reference)
 					print('- No further changes required')
@@ -62,10 +68,12 @@ def do_git(directory, repository, reference):
 		# Checkout the repo
 		print('- Cloning and moving to reference ' + reference)
 		out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .', shell=True)
+		count_git += 1
 
 		# Set to a tag release if the reference is not 'master'
 		if reference != 'master':
 			out = subprocess.check_output('cd ' + directory + '; git checkout tags/' + reference, shell=True)
+			count_git += 1
 
 	print('\n')
 	return
@@ -73,6 +81,7 @@ def do_git(directory, repository, reference):
 
 def do_svn(directory, repository):
 	print('[*** ' + directory + ' ***]')
+	global count_svn
 
 	check_make_directory(directory)
 
@@ -99,12 +108,15 @@ def do_svn(directory, repository):
 
 			out = subprocess.getoutput('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository)
 
+		count_svn += 1
+
 		if len(out) > 0:
 			print(out) 
 	else:
 		# Checkout the repo
 		print('- SVN checkout ' + repository)
 		out = subprocess.check_output('cd ' + directory + '; svn co ' + repository + ' .', shell=True)
+		count_svn += 1
 	
 
 	print('\n')
@@ -165,7 +177,8 @@ for component in specification['components']:
 #
 # All done
 #
-print('------------')
-print('Completed in %.2f seconds' %(time.time() - start_time))
-print('\n')
+print('---')
+print('SVN commands: %i' % count_svn)
+print('GIT commands: %i' % count_git)
+print('Completed in %.2f seconds\n' %(time.time() - start_time))
 
