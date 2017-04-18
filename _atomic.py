@@ -8,9 +8,12 @@ Requires
 * svn
 '''
 
+import time
 import json
 import os
 import subprocess
+
+start_time = time.time()
 
 
 def check_make_directory(directory):
@@ -155,3 +158,11 @@ for component in specification['components']:
 #
 # Fix permissions
 #
+
+
+#
+# All done
+#
+print('------------')
+print('Completed in %.2f seconds' %(time.time() - start_time))
+
