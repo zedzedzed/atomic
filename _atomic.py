@@ -14,7 +14,6 @@ import json
 import os
 import subprocess
 
-#start_time = time.time()
 count_git = 0
 count_svn = 0
 
