@@ -5,7 +5,31 @@ Requires
 * git
 * svn
 
+On developer instances, tell Git to cache your Git credentials in memory so it doesn't prompt you for each matching repository.
 ```
 $ git config --global credential.helper cache
-$ python3 _atomic.py
+
+View usage guide:
 ```
+$ python3 _atomic.py -h
+usage: _atomic.py [-h] [--core] [-c COM]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --core                Synchronises WordPress core
+  -c COM, --com COM, --component COM
+                        Name of component to synchronise
+```
+
+If you run without any paramters, it will do everything in _specification.json.
+
+Do core only:
+```
+$ python3 _atomic.py --core
+```
+
+Do the 99 and gravityforms plugins, aofm and arpc themes. These are all components.
+```
+$ python3 _atomic.py --com 99 --com gravityforms --com aofm --com arpc
+```
+

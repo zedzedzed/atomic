@@ -10,8 +10,11 @@ Requires
 
 import time
 start_time = time.time()
+
+import argparse
 import json
 import os
+import sys
 import subprocess
 
 count_git = 0
@@ -25,6 +28,16 @@ def check_make_directory(directory):
 		print('- Directory created')
 
 	return
+
+
+def get_component(needle):
+	global specification
+	
+	for component in specification['components']:
+		if needle == component['name']:
+			return component 
+
+	return False
 
 
 def do_git(directory, repository, reference):
@@ -135,6 +148,32 @@ with open('_specification.json') as spec_file:
 #print(json.dumps(specification, indent=3))
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--core', help='Synchronises WordPress core', action='store_true')
+parser.add_argument('-c', '--com', '--component', help='Name of component to synchronise', action='append')
+args = parser.parse_args()
+explicit_components = []
+todo_items = {} 
+
+if len(sys.argv) > 1:
+	if args.core == True:
+		todo_items['core'] = specification['core']
+
+	if args.com != None:
+		for arg in args.com:
+			component = get_component(arg)
+			if component != False:
+				explicit_components.append(component)
+
+		if len(explicit_components) > 0:
+			todo_items['components'] = explicit_components
+		else:
+			print('No components matched specification\n')
+else:
+	todo_items = specification
+
+
+
 #
 # Set up core
 #    "core": {
@@ -143,7 +182,9 @@ with open('_specification.json') as spec_file:
 #        "install_dir": "/core"
 #    },
 #
-do_git(pwd + specification['core']['install_dir'], specification['core']['repo'], specification['core']['reference'])
+if todo_items.get('core'):
+	do_git(pwd + todo_items['core']['install_dir'], todo_items['core']['repo'], todo_items['core']['reference'])
+
 
 
 #
@@ -156,11 +197,12 @@ do_git(pwd + specification['core']['install_dir'], specification['core']['repo']
 #            "install_dir": "/wp-content/plugins/"
 #        },
 #
-for component in specification['components']:
-	if component.get('reference'):
-		do_git(pwd + component['install_dir'] + component['name'], component['repo'], component['reference'])
-	else:
-		do_svn(pwd + component['install_dir'] + component['name'], component['repo'])
+if todo_items.get('components'):
+	for component in todo_items['components']:
+		if component.get('reference'):
+			do_git(pwd + component['install_dir'] + component['name'], component['repo'], component['reference'])
+		else:
+			do_svn(pwd + component['install_dir'] + component['name'], component['repo'])
 
 
 #
