@@ -8,6 +8,7 @@ Requires
 On developer instances, tell Git to cache your Git credentials in memory so it doesn't prompt you for each matching repository.
 ```
 $ git config --global credential.helper cache
+```
 
 View usage guide:
 ```
