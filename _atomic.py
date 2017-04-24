@@ -63,7 +63,7 @@ def do_git(directory, repository, reference):
 					subprocess.check_output('cd ' + directory + '; git pull', shell=True)
 				else:
 					print('- Changing to reference ' + reference)
-					subprocess.check_output('cd ' + directory + '; git fetch -p; git checkout tags/' + reference, shell=True)
+					subprocess.check_output('cd ' + directory + '; git fetch -p --all; git checkout tags/' + reference, shell=True)
 				count_git += 1
 			else:
 				checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
