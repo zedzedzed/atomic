@@ -21,6 +21,20 @@ count_git = 0
 count_svn = 0
 
 
+def load_specification_file(specification_file):
+	if os.path.isfile(specification_file):
+		with open(specification_file) as spec_file:
+			try:
+				return json.load(spec_file)
+				#print(json.dumps(specification, indent=3))
+			except:
+				print('Invalid json detected')
+				raise	
+	else:
+		print('Specification file not found. Exiting.')
+		exit(1)		
+
+
 def check_make_directory(directory):
 	# Create the directory if it doesn't already exist
 	if not os.path.exists(directory):
@@ -138,18 +152,11 @@ def do_svn(directory, repository):
 
 
 pwd = os.getcwd()
-
-with open('_specification.json') as spec_file:
-	try:
-		specification = json.load(spec_file)
-	except:
-		print('Invalid json detected')
-		raise
-
-#print(json.dumps(specification, indent=3))
+specification_file = '_specification.json'
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--spec', '--specification', '--conf', '--config', help='Location of the specification json file. Defaults to _specification.json in the current directory.', action='store')
 parser.add_argument('--core', help='Synchronises WordPress core', action='store_true')
 parser.add_argument('-c', '--com', '--component', help='Name of component to synchronise', action='append')
 args = parser.parse_args()
@@ -157,6 +164,11 @@ explicit_components = []
 todo_items = {} 
 
 if len(sys.argv) > 1:
+	if args.spec != None:
+		specification_file = args.spec
+
+	specification = load_specification_file(specification_file)
+
 	if args.core == True:
 		todo_items['core'] = specification['core']
 
@@ -170,7 +182,11 @@ if len(sys.argv) > 1:
 			todo_items['components'] = explicit_components
 		else:
 			print('No components matched specification\n')
+
+	if len(todo_items) == 0:
+		todo_items = specification
 else:
+	specification = load_specification_file(specification_file)
 	todo_items = specification
 
 

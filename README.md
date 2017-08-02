@@ -13,10 +13,13 @@ $ git config --global credential.helper cache
 View usage guide:
 ```
 $ python3 _atomic.py -h
-usage: _atomic.py [-h] [--core] [-c COM]
+usage: _atomic.py [-h] [--spec SPEC] [--core] [-c COM]
 
 optional arguments:
   -h, --help            show this help message and exit
+  --spec SPEC, --specification SPEC, --conf SPEC, --config SPEC
+                        Location of the specification json file. Defaults to
+                        _specification.json in the current directory.
   --core                Synchronises WordPress core
   -c COM, --com COM, --component COM
                         Name of component to synchronise
