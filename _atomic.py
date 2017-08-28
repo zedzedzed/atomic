@@ -72,7 +72,7 @@ def do_git(component):
 	if 'core' != component['name']: 
 		directory += component['name']
 
-	print('[*** ' + directory + ' ***]')
+	print(bcolors.BOLD + '[*** ' + directory + ' ***]' + bcolors.ENDC)
 	global count_git
 
 	check_make_directory(directory)
@@ -130,7 +130,7 @@ def do_svn(component):
 	directory = pwd + component['install_dir'] + component['name']
 	repository = component['repo']
 
-	print('[*** ' + directory + ' ***]')
+	print(bcolors.BOLD + '[*** ' + directory + ' ***]' + bcolors.ENDC)
 	global count_svn
 
 	check_make_directory(directory)
@@ -280,4 +280,8 @@ print('---')
 print('SVN commands: %i' % count_svn)
 print('GIT commands: %i' % count_git)
 print('Completed in %.2f seconds\n' %(time.time() - start_time))
+
+
+if len(bad_components) > 0:
+	exit(10)
 
