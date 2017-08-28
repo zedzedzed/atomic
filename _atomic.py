@@ -64,7 +64,6 @@ def get_component(needle):
 	return False
 
 
-#def do_git(directory, repository, reference):
 def do_git(component):
 	directory = pwd + component['install_dir']
 	repository = component['repo']
@@ -259,6 +258,11 @@ if todo_items.get('components'):
 
 #
 # Fix permissions
+#
+
+
+#
+# Output components with bad return codes
 #
 if len(bad_components) > 0:
 	print(bcolors.FAIL)
