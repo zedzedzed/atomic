@@ -19,6 +19,16 @@ import subprocess
 
 count_git = 0
 count_svn = 0
+bad_components = []
+
+
+class bcolors:
+	OKBLUE = '\033[94m'
+	OKGREEN = '\033[92m'
+	WARNING = '\033[93m'
+	FAIL = '\033[91m'
+	ENDC = '\033[0m'
+	BOLD = '\033[1m'
 
 
 def load_specification_file(specification_file):
@@ -54,7 +64,15 @@ def get_component(needle):
 	return False
 
 
-def do_git(directory, repository, reference):
+#def do_git(directory, repository, reference):
+def do_git(component):
+	directory = pwd + component['install_dir']
+	repository = component['repo']
+	reference = component['reference']
+
+	if 'core' != component['name']: 
+		directory += component['name']
+
 	print('[*** ' + directory + ' ***]')
 	global count_git
 
@@ -93,7 +111,11 @@ def do_git(directory, repository, reference):
 	else:
 		# Checkout the repo
 		print('- Cloning and moving to reference ' + reference)
-		out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .', shell=True)
+		try:
+			out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .', shell=True)
+		except subprocess.CalledProcessError as e:
+			bad_components.append(component['name'])
+
 		count_git += 1
 
 		# Set to a tag release if the reference is not 'master'
@@ -105,7 +127,10 @@ def do_git(directory, repository, reference):
 	return
 
 
-def do_svn(directory, repository):
+def do_svn(component):
+	directory = pwd + component['install_dir'] + component['name']
+	repository = component['repo']
+
 	print('[*** ' + directory + ' ***]')
 	global count_svn
 
@@ -200,7 +225,12 @@ else:
 #    },
 #
 if todo_items.get('core'):
-	do_git(pwd + todo_items['core']['install_dir'], todo_items['core']['repo'], todo_items['core']['reference'])
+	do_git({
+		'name': 		'core',
+		'install_dir':	todo_items['core']['install_dir'],
+		'repo':			todo_items['core']['repo'],
+		'reference':	todo_items['core']['reference']
+	})
 
 
 
@@ -217,9 +247,9 @@ if todo_items.get('core'):
 if todo_items.get('components'):
 	for component in todo_items['components']:
 		if component.get('reference'):
-			do_git(pwd + component['install_dir'] + component['name'], component['repo'], component['reference'])
+			do_git(component)
 		else:
-			do_svn(pwd + component['install_dir'] + component['name'], component['repo'])
+			do_svn(component)
 
 
 #
@@ -230,6 +260,13 @@ if todo_items.get('components'):
 #
 # Fix permissions
 #
+if len(bad_components) > 0:
+	print(bcolors.FAIL)
+	print('Errors encountered with the following components  :^(')
+	for item in bad_components:
+		print( '- ' + item )
+	print('\nScroll up to view the output')
+	print(bcolors.ENDC + '\n')
 
 
 #
