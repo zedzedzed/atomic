@@ -134,6 +134,7 @@ def do_svn(component):
 
 	print(bcolors.BOLD + '[*** ' + directory + ' ***]' + bcolors.ENDC)
 	global count_svn
+	out = ''
 
 	check_make_directory(directory)
 
@@ -145,7 +146,11 @@ def do_svn(component):
 
 		if checked_out_url == repository:
 			print('- SVN up with ' + repository)
-			out = subprocess.getoutput('cd ' + directory + '; svn up')
+
+			try:
+				out = subprocess.check_output('cd ' + directory + '; svn up', shell=True)
+			except subprocess.CalledProcessError as e:
+				bad_components.append(component['name'])
 		else:
 			print('- SVN switch')
 			print('  from ' + checked_out_url)
@@ -159,18 +164,25 @@ def do_svn(component):
 			else:
 				svn_ignore_ancestry = ''
 
-			out = subprocess.getoutput('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository)
+			try:
+				out = subprocess.check_output('cd ' + directory + '; svn sw ' + svn_ignore_ancestry + repository, shell=True)
+			except subprocess.CalledProcessError as e:
+				bad_components.append(component['name'])
 
 		count_svn += 1
 
 		if len(out) > 0:
-			print(out) 
+			print(out.decode('utf-8')) 
+
 	else:
 		# Checkout the repo
 		print('- SVN checkout ' + repository)
-		out = subprocess.check_output('cd ' + directory + '; svn co ' + repository + ' .', shell=True)
+		try:
+			out = subprocess.check_output('cd ' + directory + '; svn co ' + repository + ' .', shell=True)
+		except subprocess.CalledProcessError as e:
+			bad_components.append(component['name'])
+
 		count_svn += 1
-	
 
 	print('\n')
 	return
