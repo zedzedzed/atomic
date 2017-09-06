@@ -12,7 +12,7 @@ $ git config --global credential.helper cache
 
 View usage guide:
 ```
-$ python3 _atomic.py -h
+$ _atomic.py -h
 usage: _atomic.py [-h] [--spec SPEC] [--core] [-c COM]
 
 optional arguments:
@@ -29,11 +29,11 @@ If you run without any paramters, it will do everything in _specification.json.
 
 Do core only:
 ```
-$ python3 _atomic.py --core
+$ _atomic.py --core
 ```
 
 Do the 99 and gravityforms plugins, aofm and arpc themes. These are all components.
 ```
-$ python3 _atomic.py --com 99 --com gravityforms --com aofm --com arpc
+$ _atomic.py --com 99 --com gravityforms --com aofm --com arpc
 ```
 
