@@ -1,0 +1,31 @@
+{
+	"core": {
+		"repo": "https://github.com/WordPress/WordPress.git",
+		"reference": "4.8.1",
+		"install_dir": "/core"
+	},
+	"components": [
+		{
+			"name": "akismet",
+			"repo": "https://plugins.svn.wordpress.org/akismet/tags/3.3.2/",
+			"install_dir": "/wp-content/plugins/"
+		},
+		{
+			"name": "table-of-contents-plus",
+			"repo": "https://plugins.svn.wordpress.org/table-of-contents-plus/tags/1601",
+			"install_dir": "/wp-content/plugins/"
+		},
+		{
+			"name": "wordpress-importer",
+			"repo": "https://plugins.svn.wordpress.org/wordpress-importer/tags/0.6.3/",
+			"install_dir": "/wp-content/plugins/"
+		},
+
+
+		{
+			"name": "twentyseventeen",
+			"repo": "https://themes.svn.wordpress.org/twentyseventeen/1.1",
+			"install_dir": "/wp-content/themes/"
+		}
+	]
+}
