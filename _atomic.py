@@ -171,9 +171,6 @@ def do_svn(component):
 
 		count_svn += 1
 
-		if len(out) > 0:
-			print(out.decode('utf-8')) 
-
 	else:
 		# Checkout the repo
 		print('- SVN checkout ' + repository)
@@ -183,6 +180,9 @@ def do_svn(component):
 			bad_components.append(component['name'])
 
 		count_svn += 1
+
+	if len(out) > 0:
+		print(out.decode('utf-8'))
 
 	print('\n')
 	return
