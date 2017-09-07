@@ -1,4 +1,6 @@
-Python script to construct a working installation of WordPress, together with plugins and themes. Atomic acts similar to SVN:Externals and Composer.
+Python script to construct a working installation of WordPress, together with plugins and themes regardless of using Git or Subversion. Atomic acts similar to SVN:Externals and Composer.
+
+Although it was designed to config manage the installation of WordPress, plugins and themes across different environments, Atomic can be used for non WordPress purposes where you have an installation directory that consists of many folders of repositories.
 
 Requires
 --
@@ -16,6 +18,10 @@ If you use the supplied _specfication.json.template file as a guide, the resulti
 * /wp-contents/plugins/table-of-contents-plus/
 * /wp-contents/plugins/wordpress-importer/
 * /wp-contents/themes/twentyseventeen/
+
+Config
+--
+The first step is to copy **_specification.json.template** file to **_specification.json** and amend it to include the right version of WordPress, and the components that you need. You should place the file into the destination installation directory, eg: /opt/www/wordpress/
 
 Usage
 --
@@ -39,7 +45,7 @@ optional arguments:
                         Name of component to synchronise
 ```
 
-If you run without any paramters, it will do everything in _specification.json.
+If you run without any parameters, it will do everything in _specification.json.
 
 Do core only:
 ```
@@ -51,3 +57,13 @@ Do the akismet and wordpress importer plugins, and the twentyseventeen theme. Th
 $ _atomic.py --com akismet --com wordpress-importer --com twentyseventeen
 ```
 
+Atomic does not need to exist in the current directory.
+```
+/my/current/directory/$ /path/to/_atomic.py
+```
+The above will load _specification.json in **/my/current/directory/**
+
+The _specification.json file does not need to be in the current directory either.
+```
+/my/current/directory/$ /path/to/_atomic.py --spec /opt/wordpress/_specification.json
+```
