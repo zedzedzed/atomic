@@ -65,5 +65,5 @@ The above will load _specification.json in **/my/current/directory/**
 
 The _specification.json file does not need to be in the current directory either.
 ```
-/my/current/directory/$ /path/to/_atomic.py --spec /opt/wordpress/_specification.json
+/my/current/directory/$ /path/to/_atomic.py --spec /opt/www/wordpress/_specification.json
 ```
