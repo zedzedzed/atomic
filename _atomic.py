@@ -159,7 +159,7 @@ def do_svn(component):
 			# Themes in https://themes.svn.wordpress.org/ and plugins in https://plugins.svn.wordpress.org/
 			# produce the folllowing error when using svn switch
 			# svn: E195012: Path '.' does not share common version control ancestry with the requested switch location.  Use --ignore-ancestry to disable this check.
-			if ('https://themes.svn.wordpress.org/' in repository) or ('https://plugins.svn.wordpress.org/' in repository):
+			if ('://themes.svn.wordpress.org/' in repository) or ('://plugins.svn.wordpress.org/' in repository):
 				svn_ignore_ancestry = '--ignore-ancestry '
 			else:
 				svn_ignore_ancestry = ''
