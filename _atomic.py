@@ -87,10 +87,10 @@ def do_git(component):
 			#checked_out_version = subprocess.getoutput('cd ' + directory + '; git describe --tags')
 			git_branch = subprocess.getoutput('cd ' + directory + '; git branch')
 
-			if git_branch == '* master':
-				print('- Currently on master at ' + repository)
+			if git_branch in ['* master', '* main']:
+				print('- Currently on primary branch at ' + repository)
 
-				if reference == 'master':
+				if reference in ['master', 'main']:
 					# Should this be git fetch?
 					print('- Pulling latest changes')
 					subprocess.check_output('cd ' + directory + '; git pull', shell=True)
@@ -120,7 +120,7 @@ def do_git(component):
 		count_git += 1
 
 		# Set to a tag release if the reference is not 'master'
-		if reference != 'master':
+		if reference not in ['master', 'main']:
 			out = subprocess.check_output('cd ' + directory + '; git checkout tags/' + reference, shell=True)
 			count_git += 1
 
