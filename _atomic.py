@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import subprocess
+import shutil
 
 count_git = 0
 count_svn = 0
@@ -188,6 +189,19 @@ def do_svn(component):
 	return
 
 
+def remove_component(component):
+	directory = pwd + component['install_dir'] + component['name']
+
+	if os.path.exists(directory):
+		try:
+			shutil.rmtree(directory)
+			print('Successfully removed %s' % directory)
+		except OSError as e:
+			print(e)
+			print('Failed to remove directory %s' % directory)
+
+	return
+
 
 pwd = os.getcwd()
 specification_file = '_specification.json'
@@ -259,10 +273,13 @@ if todo_items.get('core'):
 #
 if todo_items.get('components'):
 	for component in todo_items['components']:
-		if component.get('reference'):
-			do_git(component)
+		if component.get('state') == 'removed':
+			remove_component(component)
 		else:
-			do_svn(component)
+			if component.get('reference'):
+				do_git(component)
+			else:
+				do_svn(component)
 
 
 #

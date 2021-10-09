@@ -26,6 +26,12 @@
 			"name": "twentyseventeen",
 			"repo": "https://themes.svn.wordpress.org/twentyseventeen/1.1",
 			"install_dir": "/wp-content/themes/"
+		},
+		{
+			"name": "twentysixteen",
+			"repo": "https://themes.svn.wordpress.org/twentysixteen/1.0/",
+			"install_dir": "/wp-content/themes/",
+			"state": "removed"
 		}
 	]
 }
