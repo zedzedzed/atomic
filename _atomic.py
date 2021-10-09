@@ -193,12 +193,16 @@ def remove_component(component):
 	directory = pwd + component['install_dir'] + component['name']
 
 	if os.path.exists(directory):
+		print(bcolors.BOLD + '[*** ' + directory + ' ***]' + bcolors.ENDC)
+
 		try:
 			shutil.rmtree(directory)
-			print('Successfully removed %s' % directory)
+			print('- Successfully deleted directory')
 		except OSError as e:
 			print(e)
-			print('Failed to remove directory %s' % directory)
+			print('- Failed to remove directory')
+
+		print('\n')
 
 	return
 
