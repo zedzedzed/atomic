@@ -114,16 +114,11 @@ def do_git(component):
 		# Checkout the repo
 		print('- Cloning and moving to reference ' + reference)
 		try:
-			out = subprocess.check_output('cd ' + directory + '; git clone ' + repository + ' .', shell=True)
+			out = subprocess.check_output('cd ' + directory + '; git clone --branch ' + reference + ' --depth 1 ' + repository + ' .', shell=True)
 		except subprocess.CalledProcessError as e:
 			bad_components.append(component['name'])
 
 		count_git += 1
-
-		# Set to a tag release if the reference is not 'master'
-		if reference not in ['master', 'main']:
-			out = subprocess.check_output('cd ' + directory + '; git checkout tags/' + reference, shell=True)
-			count_git += 1
 
 	print('\n')
 	return
