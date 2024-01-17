@@ -116,7 +116,7 @@ def do_git(component):
 		try:
 			if reference in ['master', 'main']:
 				reference = ''
-			else
+			else:
 				reference = '-- branch ' + reference
 			out = subprocess.check_output('cd ' + directory + '; git clone ' + reference + ' --depth 1 ' + repository + ' .', shell=True)
 		except subprocess.CalledProcessError as e:
