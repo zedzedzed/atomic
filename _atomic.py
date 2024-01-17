@@ -233,6 +233,7 @@ if len(sys.argv) > 1:
 			todo_items['components'] = explicit_components
 		else:
 			print('No components matched specification\n')
+			exit(2)
 
 	if len(todo_items) == 0:
 		todo_items = specification
