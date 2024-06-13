@@ -118,7 +118,7 @@ def do_git(component):
 				reference = ''
 			else:
 				reference = '--branch ' + reference
-			out = subprocess.check_output('cd ' + directory + '; git clone ' + reference + ' --depth 1 ' + repository + ' .', shell=True)
+			out = subprocess.check_output('cd ' + directory + '; git clone ' + reference + ' --depth 1 --recurse-submodules ' + repository + ' .', shell=True)
 		except subprocess.CalledProcessError as e:
 			bad_components.append(component['name'])
 
