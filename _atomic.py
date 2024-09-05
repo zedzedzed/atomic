@@ -110,6 +110,7 @@ def do_git(component):
 					print('- No further changes required')
 		except:
 			print('- Could not determine current tag reference')
+			bad_components.append(component['name'])
 	else:
 		# Checkout the repo
 		print('- Cloning and moving to reference ' + reference)
